@@ -1,0 +1,29 @@
+{
+  "name": "personalised-feed",
+  "version": "1.0.0",
+  "description": "A personalised feed created using TypeGraphQL, Express, Vue.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ravi8470/personalised-feed.git"
+  },
+  "author": "Ravi Kumar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ravi8470/personalised-feed/issues"
+  },
+  "homepage": "https://github.com/ravi8470/personalised-feed#readme",
+  "dependencies": {
+    "express-graphql": "^0.8.0",
+    "reflect-metadata": "^0.1.13",
+    "ts-node-dev": "^1.0.0-pre.32",
+    "type-graphql": "^0.17.1"
+  },
+  "devDependencies": {
+    "@types/node": "^11.13.5",
+    "typescript": "^3.4.4"
+  }
+}
