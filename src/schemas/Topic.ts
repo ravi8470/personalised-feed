@@ -8,6 +8,4 @@ export default class Topic {
     @Field()
     name: string;
 
-
-
 }
