@@ -19,8 +19,13 @@
   },
   "homepage": "https://github.com/ravi8470/personalised-feed#readme",
   "dependencies": {
+    "@types/body-parser": "^1.17.0",
+    "@types/cors": "^2.8.4",
     "@types/express": "^4.16.1",
     "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "dotenv": "^7.0.0",
     "element-ui": "^2.7.2",
     "express": "^4.16.4",
     "express-graphql": "^0.8.0",
