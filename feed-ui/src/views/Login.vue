@@ -10,7 +10,10 @@ export default {
     },
     methods: {
         handleAuthSubmit(userCredentials){
-            console.log('Login:' + userCredentials);
+            const { email, password } = userCredentials;
+            this.$http.post('http://localhost:3000/login',{
+                email, password
+            }).then(res => console.log(res.data));
         }
     }
 }

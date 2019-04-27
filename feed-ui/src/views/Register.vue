@@ -10,7 +10,14 @@ export default {
     },
     methods: {
         handleAuthSubmit(userCredentials){
+            const { email, password} = userCredentials;
             console.log('Register' + userCredentials.email + userCredentials.password);
+            // axios.post('http://localhost:3000/',{
+            //     email, password
+            // }).then(res => console.log(res.data)).catch(err => console.log(err));
+            this.$http.post('http://localhost:3000/register',{
+                email, password
+            }).then(res => console.log(res.data));
         }
     }
 }
