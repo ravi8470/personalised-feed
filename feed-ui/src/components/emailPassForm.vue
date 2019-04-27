@@ -3,13 +3,13 @@
     <h2>{{msg}}:</h2>
     <el-form ref="formData" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="Email" prop="email">
-        <el-input v-model="formData.email" suffix-icon="el-icon-message"></el-input>
+        <el-input v-model="formData.email" suffix-icon="el-icon-message" autocomplete="on"></el-input>
       </el-form-item>
       <el-form-item label="Password" prop="password">
         <el-input v-model="formData.password" show-password></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleAuthSubmit">{{msg}}</el-button>
+        <el-button type="primary" @click="handleAuthSubmit('formData')">{{msg}}</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -37,13 +37,19 @@ export default {
   },
   methods: {
     handleAuthSubmit(e) {
-      e.preventDefault();
       const userCrendentials = {
-      // id: uuid.v4(),
-      email: this.formData.email,
-      password: this.formData.password
+        email: this.formData.email,
+        password: this.formData.password
       };
-      this.$emit("handleAuthSubmit", userCrendentials);
+      this.$refs.formData.validate(valid => {
+        if(valid){
+          this.$emit("handleAuthSubmit", userCrendentials);
+        }
+        else{
+          console.log('not valid')
+          return false;
+        }
+      })
     }
   }
 };
