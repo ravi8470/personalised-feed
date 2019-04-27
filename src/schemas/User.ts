@@ -6,8 +6,8 @@ import Article from "./Article";
 
 @ObjectType()
 export default class User {
-    @Field(type => Int)
-    id: number;
+    @Field()
+    id: string;
 
     @Field(type => [Topic], { nullable: true })
     topics: Topic[];
