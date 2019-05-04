@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Register from "./views/Register.vue"
 import Login from './views/Login.vue'
-
+import Dashboard from './views/Dashboard.vue'
 Vue.use(Router)
 
 let router = new Router({
@@ -14,6 +14,14 @@ let router = new Router({
       path: '/',
       name: 'home',
       component: Home,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Dashboard,
       meta: {
         requiresAuth: true
       }
@@ -44,5 +52,25 @@ let router = new Router({
     }
   ]
 })
-
+router.beforeEach((to, from, next) => {
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+      if (localStorage.getItem('jwt') == null) {
+          next({
+              path: '/login',
+              // params: { nextUrl: to.fullPath }
+          })
+      } else {
+          next();
+      }
+  } else if(to.matched.some(record => record.meta.guest)) {
+      if(localStorage.getItem('jwt') == null){
+          next()
+      }
+      else{
+          next({ name: 'dashboard'})
+      }
+  }else {
+      next() 
+  }
+})
 export default router;
