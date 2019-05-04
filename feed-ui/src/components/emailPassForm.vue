@@ -9,13 +9,14 @@
         <el-input v-model="formData.password" show-password></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleAuthSubmit('formData')">{{msg}}</el-button>
+        <el-button type="primary" @click="handleAuthSubmit('formData')">{{msg}}<i v-show="loadingIcon" class="el-icon-loading"></i></el-button>
       </el-form-item>
     </el-form>
   </div>
-</template>
+</template> 
 
 <script>
+import { store, mutations } from  '../sharedStore';
 export default {
   name: "Login",
   props: ["msg"],
@@ -35,8 +36,14 @@ export default {
       }
     };
   },
+  computed:{
+    loadingIcon(){
+      return store.showLoading;
+    }
+  },
   methods: {
     handleAuthSubmit(e) {
+      mutations.toggleLoading();
       const userCrendentials = {
         email: this.formData.email,
         password: this.formData.password
