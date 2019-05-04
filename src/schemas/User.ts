@@ -1,17 +1,16 @@
 // src/schemas/User.ts
 
-import { Field, Int, ObjectType } from "type-graphql";
+import { Field, ObjectType, Int } from "type-graphql";
 import Topic from "./Topic";
-import Article from "./Article";
 
 @ObjectType()
 export default class User {
     @Field()
     id: string;
 
-    @Field(type => [Topic], { nullable: true })
-    topics: Topic[];
+    @Field(type => [Int], { nullable: true })
+    topics: [number];
 
-    @Field(type => [Article], { nullable: true })
-    articles: Article[];
+    @Field()
+    email: string;
 }
