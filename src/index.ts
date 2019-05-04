@@ -14,7 +14,7 @@ import * as testStuff from "../utilities/testFile";
 import UserResolver from "./Resolvers/UserResolver";
 const routerp = require("./routes/newRouter");
 const dotenv = require('dotenv');
-// const { populateArticles } = require('./tasks/serverTasks');
+const { populateArticles } = require('./tasks/serverTasks');
 
 
 dotenv.config();
@@ -25,7 +25,7 @@ var myHeaders = {
 }
 
 async function bootstrap(){
-    // populateArticles();
+    setInterval(populateArticles, 3*60*60*1000);
     var app: express.Application = express();
     app.use(cors());
     app.options('*', cors())//handling all preflight requests.
