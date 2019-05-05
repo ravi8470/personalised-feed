@@ -12,6 +12,7 @@ const util = require('util');
 import axios from "axios";
 import * as testStuff from "../utilities/testFile";
 import UserResolver from "./Resolvers/UserResolver";
+import ArticleResolver from "./Resolvers/ArticleResolver";
 const routerp = require("./routes/newRouter");
 const dotenv = require('dotenv');
 const { populateArticles } = require('./tasks/serverTasks');
@@ -56,7 +57,7 @@ async function bootstrap(){
     });
 
     const { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
-        resolvers: [TopicResolver, UserResolver],
+        resolvers: [TopicResolver, UserResolver, ArticleResolver],
     });
 
     

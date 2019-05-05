@@ -3,13 +3,24 @@
         <el-button type="primary" @click="fetchTopics">Add Topics for your Feed</el-button>
         <el-dialog title="Select Topics" :visible.sync="addTopicsDialogVisible" width="70%" >
             <span v-for="topic in topicsArr" v-bind:key="topic.id">
-                <el-checkbox-button class="topict" :key="topic.id" v-model="topicsArr[topic.id-1].selected">{{topic.name}}</el-checkbox-button>&nbsp;&nbsp;
+                <el-checkbox-button class="topict" :key="topic.id" v-model="topicsArr[topic.id-1].selected">{{topic.name}}</el-checkbox-button>
             </span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addTopicsDialogVisible = false">Cancel</el-button>
                 <el-button type="primary" @click="saveTopics">Save</el-button>
             </span>
         </el-dialog>
+        <el-container>
+            <el-main>
+                <div v-for="feedItem in feedArr" v-bind:key="feedItem.id">
+                    <el-col :span="24">
+                        <el-card shadow="hover">
+                            <a :href="feedItem.url"  :class="feedItem">{{feedItem.title}}</a>
+                        </el-card>
+                    </el-col>
+                </div>
+            </el-main>
+        </el-container>
         <!-- <el-button @click="addTopic">add topic</el-button> -->
     </div>
 </template>
@@ -21,6 +32,9 @@
                 email: localStorage.getItem('email'),
                 addTopicsDialogVisible: false,
                 topicsArr: [],
+                feedArr: [],
+                feedLoaded: false,
+                num:0
             }
         },
         methods: {
@@ -88,6 +102,31 @@
                     }
                 })
             }
+        },
+        mounted() {
+            if(!this.feedLoaded)
+            {
+                this.$http({
+                    url: 'http://localhost:3000/graphql', 
+                    method: 'post',
+                    data: { 
+                        query: `{getArticles{id, url, title} } `, 
+                        token: localStorage.getItem('jwt')
+                    }   
+                }).then( result => {
+                    if(result.data.error){
+                        this.showNotif('Authentication Error', result.data.error);
+                        localStorage.removeItem('jwt');
+                        localStorage.removeItem('email');
+                        this.$router.push('/login');
+                    }
+                    else{
+                        this.feedArr = result.data.data.getArticles;
+                        this.feedLoaded = true;
+                        console.log(result.data)
+                    }
+                })
+            }
         }
     }
 </script>
@@ -106,9 +145,17 @@
         margin: 0 10px;
     }
     a {
-        color: #42b983;
+        color: #18a1cb;
+        text-decoration: none
     }
-    topict{
-        margin: 20px;
+    .el-checkbox-button{
+        margin: 5px;
+    }
+    .el-card{
+        margin: 5px;
+        border: 1px solid rgb(184, 183, 183);
+    }
+    .el-main{
+        text-align: left;
     }
 </style>
