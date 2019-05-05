@@ -1,7 +1,5 @@
 <template>
     <div>
-        <p style="color:red">{{Errors}}</p>
-        <p style="color:green">{{Success}}</p>
         <emailPassForm msg="Register" v-on:handleAuthSubmit="handleAuthSubmit"/>
     </div>
 </template>
@@ -13,12 +11,6 @@ export default {
     components: {
         emailPassForm
     },
-    // data: function() {
-    //     return {
-    //         Errors: "",
-    //         Success: ""
-    //     }
-    // },
     methods: {
         handleAuthSubmit(userCredentials){
             const { email, password} = userCredentials;
