@@ -1,19 +1,10 @@
 <template>
     <div>
-        <el-button type="primary" @click="fetchTopics">Add Topics for your Feed</el-button>
-        <el-dialog title="Select Topics" :visible.sync="addTopicsDialogVisible" width="70%" >
-            <span v-for="topic in topicsArr" v-bind:key="topic.id">
-                <el-checkbox-button class="topict" :key="topic.id" v-model="topicsArr[topic.id-1].selected">{{topic.name}}</el-checkbox-button>
-            </span>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="addTopicsDialogVisible = false">Cancel</el-button>
-                <el-button type="primary" @click="saveTopics">Save</el-button>
-            </span>
-        </el-dialog>
+        <h3>Your Feed:</h3>
         <el-container>
             <el-main>
                 <div v-for="feedItem in feedArr" v-bind:key="feedItem.id">
-                    <el-col :span="24">
+                    <el-col :span="18">
                         <el-card shadow="hover">
                             <a :href="feedItem.url"  :class="feedItem">{{feedItem.title}}</a>
                         </el-card>
@@ -30,60 +21,12 @@
         data () {
             return {
                 email: localStorage.getItem('email'),
-                addTopicsDialogVisible: false,
-                topicsArr: [],
                 feedArr: [],
                 feedLoaded: false,
                 num:0
             }
         },
         methods: {
-            fetchTopics(){
-                this.$http({
-                    url: 'http://localhost:3000/graphql', 
-                    method: 'post',
-                    data: { 
-                        query: `{topics {name,id}} `, 
-                        token: localStorage.getItem('jwt')
-                    }
-                }).then((result) => {
-                    if(result.data.error){
-                        this.showNotif('Authentication Error', result.data.error);
-                        localStorage.removeItem('jwt');
-                        localStorage.removeItem('email');
-                        this.$router.push('/login');
-                    }
-                    else{
-                        this.addTopicsDialogVisible = true;
-                        this.topicsArr = result.data.data.topics.map( (item) => { item.selected = false; return item;});
-                    }
-                    
-                });
-            },
-            saveTopics(){
-                var topicIDs = [];
-                topicIDs = this.topicsArr.filter(x => x.selected == true).map(y => y.id);
-                console.log('topicids' + topicIDs);
-                console.log('type of topicIDS'+typeof topicIDs)
-                var topicIDStr = topicIDs.join();
-                console.log('string generated:' + typeof topicIDStr);
-                this.$http({
-                    url: 'http://localhost:3000/graphql',
-                    method: 'post',
-                    data: {
-                        "query": "mutation ($topicIDs: String!) { saveTopics(topicIDs: $topicIDs) } ",
-                        "variables": {"topicIDs": topicIDStr},
-                        arr: topicIDs,
-                        token: localStorage.getItem('jwt')
-                    }
-                }).then(res => {
-                    this.addTopicsDialogVisible = false;
-                    this.showNotif('','Topics saved successfully');
-                }).catch(err => {
-                    this.addTopicsDialogVisible = false;
-                    this.showNotif('Error', err);
-                });
-            },
             showNotif(title,Msg){
                 const h = this.$createElement;
                 this.$notify({
@@ -97,7 +40,7 @@
                     method: 'post',
                     data: {
                         "query": "mutation ($name: String!) { addTopic(topicName: $name) } ",
-                        "variables": {"name": 'ravi'},
+                        "variables": {"name":'' },
                         token: localStorage.getItem('jwt')
                     }
                 })
@@ -157,5 +100,8 @@
     }
     .el-main{
         text-align: left;
+    }
+    h3{
+        margin: 1px;
     }
 </style>
