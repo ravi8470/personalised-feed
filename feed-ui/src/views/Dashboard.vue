@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <h3>Your Feed:</h3>
+    <div class="dashboardContainer">
+        <h3 class="yourFeedText">Your Feed:</h3>
         <el-container>
             <el-main>
                 <div v-for="feedItem in feedArrPaginate" v-bind:key="feedItem.id" class="feedContainer">
@@ -94,7 +94,7 @@ import {store, mutations} from "../sharedStore.js";
                     }
                 })
             }
-            else{
+            else if(store.feedArr.length > 0){
                 this.renderFeed();
             }
         },
@@ -127,19 +127,22 @@ import {store, mutations} from "../sharedStore.js";
         color: #18a1cb;
         text-decoration: none
     }
+    .dashboardContainer{
+        background-color: #eaf0f1;
+    }
     .el-card{
         margin-top:0;
         margin-bottom:8px;
-        border: 1px solid rgb(184, 183, 183);
-        background-color: rgb(228, 243, 243)
+        border: 1px solid rgb(233, 255, 255);
+        /* background-color: rgb(228, 243, 243) */
     }
     .feedContainer{
         text-align: left;
     }
-    h3{
+    .yourFeedText{
+        margin-top: 0;
         margin-bottom: 0;
         border-bottom: 1px solid red;
-        background-color: ivory
     }
     
 </style>
