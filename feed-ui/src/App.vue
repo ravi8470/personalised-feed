@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <el-menu class="el-menu-demo" mode="horizontal" router=true :default-active="currentRoute">
+      <el-menu class="el-menu-demo" mode="horizontal" background-color="#E8F2F2" router=true :default-active="currentRoute">
         <a class="el-menu-item">FEED APP</a>
         <el-menu-item index="/">
           <router-link to="/">HOME</router-link>
@@ -48,6 +48,9 @@ export default   {
     logout(){
       localStorage.removeItem('jwt');
       localStorage.removeItem('email');
+      store.feedArr = [];
+      store.topicsList = [];
+      store.myTopics = [];
       const h = this.$createElement;
       this.$notify({
         message: h('b', { style: 'color: green' }, 'Successfully Logged out.')
@@ -57,7 +60,7 @@ export default   {
     checkLogin(){
       return localStorage.getItem('email') != null;
     },
-    fetchTopics(){
+    async fetchTopics(){
       console.log(`store topics leng; ${store.topicsList.length}`)
       if(store.topicsList.length == 0){
         this.$http({
@@ -67,7 +70,7 @@ export default   {
             query: `{topics {name,id}} `, 
             token: localStorage.getItem('jwt')
         }
-        }).then((result) => {
+        }).then(async (result) => {
           if(result.data.error){
               this.showNotif('Authentication Error', result.data.error);
               localStorage.removeItem('jwt');
@@ -75,7 +78,27 @@ export default   {
               this.$router.push('/login');
           }
           else{
+            await this.$http({
+              url:'http://localhost:3000/graphql',
+              method: 'post',
+              data:{
+                query: `{myTopics {topics}} `, 
+                token: localStorage.getItem('jwt')
+              }
+            }).then( res => {
+                if(res.data.data.myTopics['topics']){
+                  console.log('mytopics arrived: ' + res.data.data.myTopics['topics'])
+                  store.myTopics = res.data.data.myTopics['topics'];
+                }
+            })
+            console.log('adding selected filed')
             store.topicsList = result.data.data.topics.map( (item) => { item.selected = false; return item;});
+            for(const p of store.topicsList){
+              if(store.myTopics.indexOf(p.id) > -1){
+                p.selected = true;
+              }
+            }
+            console.log(`after modifying selected ; ${store.topicsList}`);
             this.topicsArr = store.topicsList;
             this.addTopicsDialogVisible = true;
           }
@@ -102,7 +125,7 @@ export default   {
           }
       }).then(res => {
           this.addTopicsDialogVisible = false;
-          this.showNotif('','Topics saved successfully');
+          this.showNotif('','Feed customized successfully. Refresh to see changes.');
           store.feedArr = [];
       }).catch(err => {
           this.addTopicsDialogVisible = false;

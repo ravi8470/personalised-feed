@@ -32,6 +32,7 @@ export default {
                     localStorage.setItem('email', res.data.email);
                     store.feedArr = [];
                     store.topicsList = [];
+                    store.myTopics = [];
                     this.$router.push('/Dashboard');
                 }
             });
