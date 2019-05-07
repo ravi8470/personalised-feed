@@ -16,7 +16,7 @@ export default class{
         var res = await pool.query('SELECT topics from users where id = $1',[ctx.id]);
         console.log(res.rows[0].topics);
         var re = await pool.query('SELECT * from articles where topic_id = ANY($1)',[res.rows[0].topics]);
-        console.log(re.rows);
+        // console.log(re.rows);
         return re.rows;
     }
 }

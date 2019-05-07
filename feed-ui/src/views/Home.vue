@@ -1,5 +1,8 @@
 <template>
-  <div class="home"></div>
+  <div class="home">
+    <h1>Welcome to your Personalised Feed App</h1>
+    <h3>Register & Login to generate your Personalised Feed.</h3>
+  </div>
 </template>
 
 <script>

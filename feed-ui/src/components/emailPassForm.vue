@@ -64,10 +64,11 @@ export default {
 
 <style scoped>
 .loginForm {
-  margin-top: 15px;
+  /* margin-top: 15px; */
   border: 3px dashed #ebebeb;
   border-radius: 3px;
   transition: 0.2s;
   padding: 15px;
+  max-width: 600px;
 }
 </style>

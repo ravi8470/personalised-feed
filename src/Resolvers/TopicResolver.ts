@@ -10,7 +10,7 @@ export default class{
     @Query(returns => [Topic])
     async topics(){
         var allTopics: [Topic];
-        await pool.query('SELECT * FROM topics').then(res => {console.log(res.rows); allTopics = res.rows;}).catch(err =>{
+        await pool.query('SELECT * FROM topics').then(res =>  allTopics = res.rows).catch(err =>{
             console.log("error occurred" + err);
         });
         return allTopics!;

@@ -30,7 +30,7 @@ async function updateArticlesInDB(){
     // console.log(newRows);
     var articleIDs = await pool.query('SELECT id from articles');
     articleIDs = articleIDs.rows.map(item => item.id);
-    console.log(articleIDs);
+    // console.log(articleIDs);
     var toBeInsertedRows = newRows.filter(newRow => articleIDs.indexOf(newRow.id) == -1);
     for(var row of toBeInsertedRows){
         await pool.query('insert into articles values($1,$2,$3,$4)',[row.id,row.url,row.title,row.topic_id]);
