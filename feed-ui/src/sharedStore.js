@@ -1,7 +1,9 @@
 import Vue from "vue";
 
 export const store = Vue.observable({
-  showLoading: false
+  showLoading: false,
+  topicsList: [],
+  feedArr: [],
 });
 
 export const mutations = {

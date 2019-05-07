@@ -6,9 +6,6 @@
         <el-menu-item index="/">
           <router-link to="/">HOME</router-link>
         </el-menu-item>
-        <el-menu-item index="/register" v-if="!checkLogin()">
-          <router-link  to="/register">REGISTER</router-link>
-        </el-menu-item>
         <el-menu-item index="/dashboard" v-if="checkLogin()">
           <router-link to="/dashboard">DASHBOARD</router-link>
         </el-menu-item>
@@ -18,14 +15,17 @@
         <el-menu-item index="/login" v-if="!checkLogin()">
           <router-link  to="/login">LOGIN</router-link>
         </el-menu-item>
-        <a @click="fetchTopics" v-show="checkLogin()" class="el-menu-item">CUSTOMIZE FEED</a>
-        <a @click="logout" v-show="checkLogin()" class="el-menu-item">LOGOUT</a>
+        <el-menu-item index="/register" v-if="!checkLogin()">
+          <router-link  to="/register">REGISTER</router-link>
+        </el-menu-item>
+        <a @click="fetchTopics" v-if="checkLogin()" class="el-menu-item">CUSTOMIZE FEED</a>
+        <a @click="logout" v-if="checkLogin()" class="el-menu-item">LOGOUT</a>
       </el-menu>
     </div>
     <router-view/> <!-- this is important as it helps with vue-routing -->
     <el-dialog title="Select Topics" :visible.sync="addTopicsDialogVisible" width="70%" >
       <span v-for="topic in topicsArr" v-bind:key="topic.id">
-        <el-checkbox-button class="topict" :key="topic.id" v-model="topicsArr[topic.id-1].selected">{{topic.name}}</el-checkbox-button>
+        <el-checkbox-button :key="topic.id" v-model="topicsArr[topic.id-1].selected">{{topic.name}}</el-checkbox-button>
       </span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addTopicsDialogVisible = false">Cancel</el-button>
@@ -36,11 +36,12 @@
 </template>
 
 <script>
+import {store, mutations} from "./sharedStore.js";
 export default   {
   data(){
     return{
       addTopicsDialogVisible: false,
-      topicsArr: []
+      topicsArr: store.topicsList
     }
   },
   methods: {
@@ -57,25 +58,32 @@ export default   {
       return localStorage.getItem('email') != null;
     },
     fetchTopics(){
-      this.$http({
+      console.log(`store topics leng; ${store.topicsList.length}`)
+      if(store.topicsList.length == 0){
+        this.$http({
         url: 'http://localhost:3000/graphql', 
         method: 'post',
         data: { 
             query: `{topics {name,id}} `, 
             token: localStorage.getItem('jwt')
         }
-      }).then((result) => {
-        if(result.data.error){
-            this.showNotif('Authentication Error', result.data.error);
-            localStorage.removeItem('jwt');
-            localStorage.removeItem('email');
-            this.$router.push('/login');
-        }
-        else{
-          this.addTopicsDialogVisible = true;
-          this.topicsArr = result.data.data.topics.map( (item) => { item.selected = false; return item;});
-        }
-      });
+        }).then((result) => {
+          if(result.data.error){
+              this.showNotif('Authentication Error', result.data.error);
+              localStorage.removeItem('jwt');
+              localStorage.removeItem('email');
+              this.$router.push('/login');
+          }
+          else{
+            store.topicsList = result.data.data.topics.map( (item) => { item.selected = false; return item;});
+            this.topicsArr = store.topicsList;
+            this.addTopicsDialogVisible = true;
+          }
+        });
+      }
+      else if(store.topicsList.length > 0){
+        this.addTopicsDialogVisible = true;
+      }
     },
     saveTopics(){
       var topicIDs = [];
@@ -95,6 +103,7 @@ export default   {
       }).then(res => {
           this.addTopicsDialogVisible = false;
           this.showNotif('','Topics saved successfully');
+          store.feedArr = [];
       }).catch(err => {
           this.addTopicsDialogVisible = false;
           this.showNotif('Error', err);``
@@ -132,6 +141,9 @@ export default   {
 .el-menu-item{
   text-decoration: none;
   align-content: center;
+}
+.el-checkbox-button{
+  margin: 5px;
 }
 
 </style>
