@@ -30,6 +30,8 @@ export default {
                 else if(res.data.auth){
                     localStorage.setItem('jwt', res.data.token);
                     localStorage.setItem('email', res.data.email);
+                    store.feedArr = [];
+                    store.topicsList = [];
                     this.$router.push('/Dashboard');
                 }
             });
