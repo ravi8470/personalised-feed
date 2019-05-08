@@ -1,22 +1,20 @@
 import "reflect-metadata";
-//import graphql related imports here
+
 import { buildTypeDefsAndResolvers } from "type-graphql";
 import TopicResolver from './Resolvers/TopicResolver';
-import { makeExecutableSchema } from "graphql-tools";
-
-import express from "express";
-const graphqlHTTP = require('express-graphql');
-import cors from "cors";
-import bodyParser from "body-parser";
-const util = require('util');
-import axios from "axios";
-import * as testStuff from "../utilities/testFile";
 import UserResolver from "./Resolvers/UserResolver";
 import ArticleResolver from "./Resolvers/ArticleResolver";
-const routerp = require("./routes/newRouter");
-const dotenv = require('dotenv');
-const { populateArticles } = require('./tasks/serverTasks');
+import { makeExecutableSchema } from "graphql-tools";
+const graphqlHTTP = require('express-graphql');
 
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
+import axios from "axios";
+const dotenv = require("dotenv");
+const path = require('path');
+
+const { populateArticles } = require('./tasks/serverTasks');
 
 dotenv.config();
 
@@ -32,11 +30,11 @@ async function bootstrap(){
     app.options('*', cors())//handling all preflight requests.
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(bodyParser.json());
-     
+    app.use(express.static(path.join(__dirname , '../feed-ui/dist')))
     app.use('/graphql', async function (req, res, next) {
         console.log('Request URL:', req.originalUrl);
         if(req.body.token){
-            var result = await axios.post('https://aviana.herokuapp.com/user/verify', {'accessToken': req.body.token}, {headers: myHeaders}).catch(err =>{
+            var result: any = await axios.post('https://aviana.herokuapp.com/user/verify', {'accessToken': req.body.token}, {headers: myHeaders}).catch(err =>{
                 console.log('error occurred:' + err);
                 res.send({error: err});
             });
@@ -52,19 +50,14 @@ async function bootstrap(){
         }
         else{
             res.send({error:'Error in authentication Server.'});
-        }
-        
+        } 
     });
 
     const { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
         resolvers: [TopicResolver, UserResolver, ArticleResolver],
     });
-
     
     const schema = makeExecutableSchema({ typeDefs, resolvers });
-
-    
-    
 
     app.use('/', require("./routes/authRouter"));
 
@@ -76,11 +69,9 @@ async function bootstrap(){
         }
     })));
 
-    app.use('/user', routerp);
     app.all('*', (req,res) => {
         res.send("<h1>404 - Not Found </h1>");
     });
-
 
     app.listen(process.env.PORT, () => console.log(`server started at ${process.env.PORT}`));
 }
