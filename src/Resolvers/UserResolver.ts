@@ -1,4 +1,4 @@
-import {Arg, Resolver, Mutation, Ctx, Int, Query, string} from "type-graphql";
+import {Arg, Resolver, Mutation, Ctx, Int, Query} from "type-graphql";
 import User from "../schemas/User";
 import { requestInterface } from "../types/requestInterface";
 const util = require('util');
@@ -11,7 +11,7 @@ export default class{
     
     @Mutation(returns => Boolean)
     async saveTopics(
-        @Arg('topicIDs') topicIDs: String,
+        @Arg('topicIDs') topicIDs: string,
         @Ctx() ctx: requestInterface
     ){
         console.log('topics received as: ' + topicIDs);
