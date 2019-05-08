@@ -1,10 +1,11 @@
 import express, {Router} from "express";
 const userController = require('../controllers/userController');
+const path = require('path');
 
 const router: Router = express.Router();
 
 router.get('/', (req, res) => {
-    res.send('hello from router');
+    res.sendFile(path.join(__dirname, '../../feed-ui/dist', 'index.html'));
 });
 
 router.post('/register', async (req, res) => {
