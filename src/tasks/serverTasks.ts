@@ -5,9 +5,9 @@ var newRows = new Array;
 exports.populateArticles = async function(){
     var topics = await pool.query('SELECT * from topics');
     var cnt = 0;
-    topics.rows.forEach(async (element, index) => {
+    topics.rows.forEach(async (element: any) => {
         let res = await axios.get(`https://www.reddit.com/r/${element.name}/hot.json?limit=6`);
-        await res.data.data.children.forEach((obj) => {
+        await res.data.data.children.forEach((obj: any) => {
             let {id, permalink: url, title } = obj.data;
             var temp= {
                 id: id,
@@ -29,7 +29,7 @@ async function updateArticlesInDB(){
     console.log('in updateArticlesInDB');
     // console.log(newRows);
     var articleIDs = await pool.query('SELECT id from articles');
-    articleIDs = articleIDs.rows.map(item => item.id);
+    articleIDs = articleIDs.rows.map((item: any) => item.id);
     // console.log(articleIDs);
     var toBeInsertedRows = newRows.filter(newRow => articleIDs.indexOf(newRow.id) == -1);
     for(var row of toBeInsertedRows){
@@ -38,7 +38,7 @@ async function updateArticlesInDB(){
     var toBeInsertedIDs =  toBeInsertedRows.map(de => de.id);
     console.log('tobeinsertedid' + toBeInsertedIDs);
     var newRowIDs = newRows.map(c => c.id);
-    var toBeDeletedRowIDs = articleIDs.filter(g => newRowIDs.indexOf(g) == -1);
+    var toBeDeletedRowIDs = articleIDs.filter((g: any) => newRowIDs.indexOf(g) == -1);
     await pool.query('delete from articles where id = ANY($1)',[toBeDeletedRowIDs]);
     console.log('tobe deleted ids;' + toBeDeletedRowIDs);
 

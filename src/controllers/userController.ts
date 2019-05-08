@@ -42,7 +42,7 @@ exports.loginUser = async function(email: string, password: string){
     var jwtToken: string;
     var result;
     var flag1 = 0;
-    var result1 = await axios.post('https://aviana.herokuapp.com/user/signin', data, {headers: myHeaders}).catch(err =>{
+    var result1: any = await axios.post('https://aviana.herokuapp.com/user/signin', data, {headers: myHeaders}).catch(err =>{
         console.log("error occurred" + err);
         flag1 = 1;
     });
@@ -52,7 +52,7 @@ exports.loginUser = async function(email: string, password: string){
     jwtToken = result1.data.token;
     console.log(jwtToken);
     var flag2 = 0; 
-    var result2 = await axios.post('https://aviana.herokuapp.com/user/verify', {'accessToken': jwtToken}, {headers: myHeaders}).catch(err =>{
+    var result2: any = await axios.post('https://aviana.herokuapp.com/user/verify', {'accessToken': jwtToken}, {headers: myHeaders}).catch(err =>{
         console.log("error occurred" + err);
         flag2 = 1;
     });
@@ -62,7 +62,8 @@ exports.loginUser = async function(email: string, password: string){
     // console.dir(result2);
     console.log(result2.data._id);
     var flag3 = 0;
-    var result3;  await pool.query('SELECT * FROM users WHERE id = $1', [result2.data._id]).then(res => {console.log('res.data for select *'); result3 = res;}).catch(err =>{
+    var result3: any;  
+    await pool.query('SELECT * FROM users WHERE id = $1', [result2.data._id]).then((res :any) => {console.log('res.data for select *'); result3 = res;}).catch((err: any) =>{
         console.log("error occurred" + err);
         flag3 = 1;
     });
@@ -73,7 +74,7 @@ exports.loginUser = async function(email: string, password: string){
     var flag4 = 0;
     if(result3.rowCount == 0){
         console.log('inserting user');
-        var result4 = await pool.query('INSERT INTO users(id, email) VALUES ($1, $2)', [result2.data._id, result2.data.email]).catch(err => {console.log(err); flag4 = 1;});
+        var result4 = await pool.query('INSERT INTO users(id, email) VALUES ($1, $2)', [result2.data._id, result2.data.email]).catch((err: any) => {console.log(err); flag4 = 1;});
         if(flag4 == 1){ return { auth: false,error: "Server Error"};}
         console.log('resul4' + result4);
         // console.log(util.inspect(result4, {showHidden: false, depth: null}))
