@@ -6,8 +6,20 @@ import Login from './views/Login.vue'
 import Dashboard from './views/Dashboard.vue'
 Vue.use(Router)
 
+const scrollBehavior = (to, from, savedPosition) => {
+  if (savedPosition) {
+    return savedPosition
+  } 
+  else {
+    position.x = 0
+    position.y = 0
+  }
+  return position
+}
+
 let router = new Router({
   mode: 'history',
+  scrollBehavior,
   base: process.env.BASE_URL,
   routes: [
     {
