@@ -14,7 +14,7 @@ export default {
     methods: {
         handleAuthSubmit(userCredentials){
             const { email, password} = userCredentials;
-            this.$http.post('http://localhost:3000/register',{
+            this.$http.post(process.env.VUE_APP_SERVER_URL + 'register',{
                 email, password
             }).then(res => {
                 mutations.toggleLoading();

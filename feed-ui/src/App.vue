@@ -64,7 +64,7 @@ export default   {
       console.log(`store topics leng; ${store.topicsList.length}`)
       if(store.topicsList.length == 0){
         this.$http({
-        url: 'http://localhost:3000/graphql', 
+        url: process.env.VUE_APP_SERVER_URL + 'graphql', 
         method: 'post',
         data: { 
             query: `{topics {name,id}} `, 
@@ -79,7 +79,7 @@ export default   {
           }
           else{
             await this.$http({
-              url:'http://localhost:3000/graphql',
+              url:process.env.VUE_APP_SERVER_URL + 'graphql',
               method: 'post',
               data:{
                 query: `{myTopics {topics}} `, 
@@ -114,7 +114,7 @@ export default   {
       var topicIDStr = topicIDs.join();
       console.log('string generated:' + typeof topicIDStr);
       this.$http({
-          url: 'http://localhost:3000/graphql',
+          url: process.env.VUE_APP_SERVER_URL + 'graphql',
           method: 'post',
           data: {
               "query": "mutation ($topicIDs: String!) { saveTopics(topicIDs: $topicIDs) } ",

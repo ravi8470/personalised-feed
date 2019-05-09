@@ -14,7 +14,7 @@ export default {
     methods: {
         handleAuthSubmit(userCredentials){
             const { email, password } = userCredentials;
-            this.$http.post('http://localhost:3000/login',{
+            this.$http.post(process.env.VUE_APP_SERVER_URL + 'login',{
                 email, password
             }).then(res => {
                 console.log('Login:'+ res.data);

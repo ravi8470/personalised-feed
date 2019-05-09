@@ -73,7 +73,7 @@ import {store, mutations} from "../sharedStore.js";
         mounted() {
             if(store.feedArr.length == 0){
                 this.$http({
-                url: 'http://localhost:3000/graphql', 
+                url: process.env.VUE_APP_SERVER_URL + 'graphql', 
                 method: 'post',
                 data: { 
                     query: `{getArticles{id, url, title} } `, 
