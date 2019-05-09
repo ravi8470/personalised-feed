@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpileOnly --no-notify ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "herokuRun": "npm run tsc && cd feed-ui && npm install && npm run build && cd ../dist/src/ && node index.js"
   },
   "repository": {
     "type": "git",
