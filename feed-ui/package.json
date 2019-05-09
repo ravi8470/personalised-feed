@@ -21,7 +21,7 @@
     "eslint-plugin-vue": "^5.0.0",
     "vue": "^2.6.10",
     "vue-router": "^3.0.6",
-    "vue-template-compiler": "^2.5.21"
+    "vue-template-compiler": "^2.6.10"
   },
   "devDependencies": {},
   "eslintConfig": {
