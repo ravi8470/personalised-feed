@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import {store, mutations} from "./sharedStore.js";
+import {store} from "./sharedStore.js";
 export default   {
   data(){
     return{
@@ -91,7 +91,6 @@ export default   {
                   store.myTopics = res.data.data.myTopics['topics'];
                 }
             })
-            console.log('adding selected filed')
             store.topicsList = result.data.data.topics.map( (item) => { item.selected = false; return item;});
             for(const p of store.topicsList){
               if(store.myTopics.indexOf(p.id) > -1){
@@ -123,7 +122,7 @@ export default   {
               arr: topicIDs,
               token: localStorage.getItem('jwt')
           }
-      }).then(res => {
+      }).then(() => {
           this.addTopicsDialogVisible = false;
           this.showNotif('','Feed customized successfully. Refresh to see changes.');
           store.feedArr = [];
@@ -133,7 +132,6 @@ export default   {
       });
     },
     showNotif(title,Msg){
-      const h = this.$createElement;
       this.$notify({
           title: title,
           message: Msg
