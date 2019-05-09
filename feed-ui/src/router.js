@@ -11,10 +11,12 @@ const scrollBehavior = (to, from, savedPosition) => {
     return savedPosition
   } 
   else {
+    var position = {};
     position.x = 0
     position.y = 0
+    return position;
   }
-  return position
+  
 }
 
 let router = new Router({
