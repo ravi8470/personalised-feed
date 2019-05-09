@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { store, mutations } from  '../sharedStore';
+import { mutations } from  '../sharedStore';
 import emailPassForm from "../components/emailPassForm.vue";
 export default {
     components: {
@@ -18,7 +18,6 @@ export default {
                 email, password
             }).then(res => {
                 mutations.toggleLoading();
-                console.log(res.data);
                 const h = this.$createElement;
                 if(res.data.error){
                     this.$notify({

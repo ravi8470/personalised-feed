@@ -17,7 +17,6 @@ export default {
             this.$http.post(process.env.VUE_APP_SERVER_URL + 'login',{
                 email, password
             }).then(res => {
-                console.log('Login:'+ res.data);
                 mutations.toggleLoading();
                 if(res.data.error ){
                     const h = this.$createElement;

@@ -42,7 +42,7 @@ export default {
     }
   },
   methods: {
-    handleAuthSubmit(e) {
+    handleAuthSubmit() {
       mutations.toggleLoading();
       const userCrendentials = {
         email: this.formData.email,
@@ -53,7 +53,6 @@ export default {
           this.$emit("handleAuthSubmit", userCrendentials);
         }
         else{
-          console.log('not valid')
           return false;
         }
       })

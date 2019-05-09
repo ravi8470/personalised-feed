@@ -61,7 +61,7 @@ export default   {
       return localStorage.getItem('email') != null;
     },
     async fetchTopics(){
-      console.log(`store topics leng; ${store.topicsList.length}`)
+      // console.log(`store topics leng; ${store.topicsList.length}`)
       if(store.topicsList.length == 0){
         this.$http({
         url: process.env.VUE_APP_SERVER_URL + 'graphql', 
@@ -87,7 +87,6 @@ export default   {
               }
             }).then( res => {
                 if(res.data.data.myTopics['topics']){
-                  console.log('mytopics arrived: ' + res.data.data.myTopics['topics'])
                   store.myTopics = res.data.data.myTopics['topics'];
                 }
             })
@@ -97,7 +96,7 @@ export default   {
                 p.selected = true;
               }
             }
-            console.log(`after modifying selected ; ${store.topicsList}`);
+            // console.log(`after modifying selected ; ${store.topicsList}`);
             this.topicsArr = store.topicsList;
             this.addTopicsDialogVisible = true;
           }
@@ -110,9 +109,8 @@ export default   {
     saveTopics(){
       var topicIDs = [];
       topicIDs = this.topicsArr.filter(x => x.selected == true).map(y => y.id);
-      console.log('topicids' + topicIDs);
+      // console.log('topicids' + topicIDs);
       var topicIDStr = topicIDs.join();
-      console.log('string generated:' + typeof topicIDStr);
       this.$http({
           url: process.env.VUE_APP_SERVER_URL + 'graphql',
           method: 'post',

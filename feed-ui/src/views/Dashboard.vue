@@ -19,7 +19,7 @@
 
 <script>
 import Vue from 'vue';
-import {store, mutations} from "../sharedStore.js";
+import {store} from "../sharedStore.js";
     export default {
         data () {
             return {
@@ -33,7 +33,6 @@ import {store, mutations} from "../sharedStore.js";
         },
         methods: {
             showNotif(title,Msg){
-                const h = this.$createElement;
                 this.$notify({
                     title: title,
                     message: Msg
@@ -88,7 +87,7 @@ import {store, mutations} from "../sharedStore.js";
                     }
                     else{
                         store.feedArr = result.data.data.getArticles;
-                        console.log(result.data)
+                        // console.log(result.data)
                         this.totalFeedItems = store.feedArr.length;
                         this.renderFeed();
                     }
