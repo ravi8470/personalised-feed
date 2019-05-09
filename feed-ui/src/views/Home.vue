@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <h1>Welcome to your Personalised Feed App</h1><hr>
-    <el-carousel :interval="4000" type="card" height="300px">
+    <el-carousel :interval="3000" type="card" height="300px">
       <el-carousel-item v-for="item in itemsArr" :key="item">
         <h3 class="large">{{ item }}</h3>
       </el-carousel-item>
@@ -13,13 +13,9 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
 
 export default {
   name: "home",
-  components: {
-    HelloWorld
-  },
   data(){
     return{
       itemsArr:['Select from over a million(:-p) topics like Coding, Law, Marketing, Javascript, Economics, History','JWT Based Fast and Secure Authentication','Powered by Element-UI','Single Page Application Made with Vue']
