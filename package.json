@@ -7,7 +7,8 @@
     "dev": "ts-node-dev --respawn --transpileOnly --no-notify ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "herokuRun": "npm install && npm run tsc && cd feed-ui && npm install && npm run build && cd ../dist/src/ && node index.js"
+    "herokuRun": "node index.js",
+    "postinstall": "tsc && cd feed-ui && npm install && npm run build && cd ../dist/src/ "
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "@types/cors": "^2.8.5",
     "@types/express": "^4.16.1",
     "@types/graphql": "^14.2.0",
+    "@types/node": "^12.0.0",
     "@types/pg": "^7.4.14",
     "axios": "^0.18.0",
     "body-parser": "^1.19.0",
@@ -43,7 +45,9 @@
     "util": "^0.11.1"
   },
   "devDependencies": {
-    "@types/node": "^11.13.10",
     "ts-node-dev": "^1.0.0-pre.35"
-  }
+  },
+  "engines":{
+    "node":"10.14.2"
+ }
 }
