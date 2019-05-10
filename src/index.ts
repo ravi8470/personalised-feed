@@ -14,8 +14,6 @@ import axios from "axios";
 const dotenv = require("dotenv");
 const path = require('path');
 
-const { populateArticles } = require('./tasks/serverTasks');
-
 dotenv.config();
 
 var myHeaders = {
@@ -24,7 +22,6 @@ var myHeaders = {
 }
 
 async function bootstrap(){
-    setInterval(populateArticles, 3*60*60*1000);
     var app: express.Application = express();
     app.use(cors());
     app.options('*', cors())//handling all preflight requests.

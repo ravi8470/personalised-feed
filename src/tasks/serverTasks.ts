@@ -2,7 +2,7 @@ const pool = require('../Pool');
 import axios from "axios";
 
 var newRows = new Array;
-exports.populateArticles = async function(){
+async function populateArticles(){
     var topics = await pool.query('SELECT * from topics');
     var cnt = 0;
     topics.rows.forEach(async (element: any) => {
@@ -43,3 +43,5 @@ async function updateArticlesInDB(){
     console.log('tobe deleted ids;' + toBeDeletedRowIDs);
 
 }
+
+populateArticles();
