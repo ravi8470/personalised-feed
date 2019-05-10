@@ -14,12 +14,16 @@ export default class{
         @Arg('topicIDs') topicIDs: string,
         @Ctx() ctx: requestInterface
     ){
-        console.log('topics received as: ' + topicIDs);
+        console.log('topics received as: ' + topicIDs.length);
         console.log('typeof' + typeof topicIDs);
-        var arr = topicIDs.split(',').map(c => parseInt(c));
-        // console.log(util.inspect(ctx, {showHidden: false, depth: null}));
-        console.log(ctx.id);
-        var res = await pool.query('UPDATE users SET topics = $1 WHERE id = $2',[arr, ctx.id]);
+        if(topicIDs.length == 0){
+            await pool.query('UPDATE users SET topics = $1 WHERE id = $2',['{}', ctx.id]);
+        }
+        else{
+            var arr = topicIDs.split(',').map(c => parseInt(c));
+            console.log(ctx.id);
+            var res = await pool.query('UPDATE users SET topics = $1 WHERE id = $2',[arr, ctx.id]);
+        }
         return true;
     }
 

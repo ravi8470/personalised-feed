@@ -55,7 +55,7 @@ import {store} from "../sharedStore.js";
                         }
                     })    
                 }
-                else if(this.displayedItemsCount == store.feedArr.length){
+                else if((this.displayedItemsCount == store.feedArr.length) && this.displayedItemsCount > 0){
                     this.showNotif('End Of Feed.');
                 }
             }
