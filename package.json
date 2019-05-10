@@ -7,7 +7,7 @@
     "dev": "ts-node-dev --respawn --transpileOnly --no-notify ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "herokuRun": "ls && cd dist/src && node index.js",
+    "herokuRun": "ls && cd dist && node index.js",
     "postinstall": "tsc && cd feed-ui && npm install && npm run build"
   },
   "repository": {
