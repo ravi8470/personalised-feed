@@ -70,7 +70,7 @@ async function bootstrap(){
     })));
 
     app.all('*', (req,res) => {
-        res.send("<h1>404 - Not Found </h1>");
+        res.sendFile(path.join(__dirname, '../feed-ui/dist', 'index.html'));
     });
 
     app.listen(process.env.PORT, () => console.log(`server started at ${process.env.PORT}`));
