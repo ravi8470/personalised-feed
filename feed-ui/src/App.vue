@@ -1,23 +1,13 @@
 <template>
   <div id="app">
     <div id="nav">
-      <el-menu class="el-menu-demo" mode="horizontal" background-color="#E8F2F2" router=true :default-active="currentRoute">
+      <el-menu class="el-menu-demo" mode="horizontal" background-color="#E8F2F2" :router=true >
         <a class="el-menu-item">FEED APP</a>
-        <el-menu-item index="/">
-          <router-link to="/">HOME</router-link>
-        </el-menu-item>
-        <el-menu-item index="/dashboard" v-if="checkLogin()">
-          <router-link to="/dashboard">DASHBOARD</router-link>
-        </el-menu-item>
-        <el-menu-item index="/about">
-          <router-link to="/about">ABOUT</router-link>
-        </el-menu-item>
-        <el-menu-item index="/login" v-if="!checkLogin()">
-          <router-link  to="/login">LOGIN</router-link>
-        </el-menu-item>
-        <el-menu-item index="/register" v-if="!checkLogin()">
-          <router-link  to="/register">REGISTER</router-link>
-        </el-menu-item>
+        <el-menu-item index="/">HOME</el-menu-item>
+        <el-menu-item index="/dashboard" v-if="checkLogin()">DASHBOARD</el-menu-item>
+        <el-menu-item index="/about">ABOUT</el-menu-item>
+        <el-menu-item index="/login" v-if="!checkLogin()">LOGIN</el-menu-item>
+        <el-menu-item index="/register" v-if="!checkLogin()">REGISTER</el-menu-item>
         <a @click="showCustomizeFeedDialog" v-if="checkLogin()" class="el-menu-item">CUSTOMIZE FEED</a>
         <a @click="logout" v-if="checkLogin()" class="el-menu-item">LOGOUT</a>
       </el-menu>
@@ -55,7 +45,7 @@ export default   {
       this.$notify({
         message: h('b', { style: 'color: green' }, 'Successfully Logged out.')
       });
-      this.$router.push('/');
+      this.$router.go('/');
     },
     checkLogin(){
       return localStorage.getItem('email') != null;
@@ -110,12 +100,6 @@ export default   {
     currentRoute(){
       return this.$route.path;
     },
-    addTopicsDialogVisible(){
-      return store.addTopicsDialogVisible;
-    }
-    // checkLogin(){
-    //   return localStorage.getItem('email') != null;
-    // }
   },
 }
 </script>
