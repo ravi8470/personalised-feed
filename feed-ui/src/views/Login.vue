@@ -16,7 +16,7 @@ export default {
             const { email, password } = userCredentials;
             this.$http.post(process.env.VUE_APP_SERVER_URL + 'login',{
                 email, password
-            }).then(res => {
+            }).then(async (res) => {
                 mutations.toggleLoading();
                 if(res.data.error ){
                     const h = this.$createElement;
@@ -32,6 +32,9 @@ export default {
                     store.feedArr = [];
                     store.topicsList = [];
                     store.myTopics = [];
+                    mutations.fetchAllTopics();
+                    await mutations.fetchMyTopics();
+                    console.log(`my topics len from login ${store.myTopics.length}`)
                     this.$router.push('/Dashboard');
                 }
             });

@@ -19,95 +19,106 @@
 
 <script>
 import Vue from 'vue';
-import {store} from "../sharedStore.js";
-    export default {
-        data () {
-            return {
-                email: localStorage.getItem('email'),
-                feedArrPaginate: [],
-                totalFeedItems: store.feedArr.length,
-                displayedItemsCount: 0,
-                bottomReached: false,
-                endOfFeed: false
-            }
-        },
-        methods: {
-            showNotif(title,Msg){
-                this.$notify({
-                    title: title,
-                    message: Msg
-                });
-            },
-            isBottomReached(){
-                var result = (document.documentElement.clientHeight == document.documentElement.scrollHeight)  ||
-                ( (window.scrollY + document.documentElement.clientHeight) >= (document.documentElement.scrollHeight-2));
-                // console.log(`scrollheight: ${document.documentElement.scrollHeight}, clientheight: ${document.documentElement.clientHeight}, scrollY++: ${window.scrollY+ document.documentElement.clientHeight}`);
-                // console.log(`result was ${result}`);
-                return result;
-            },
-            renderFeed(){
-                if(this.displayedItemsCount < this.totalFeedItems){
-                    this.feedArrPaginate.push(store.feedArr[this.displayedItemsCount++]);
-                    var myObj = this;
-                    Vue.nextTick(function () {
-                        if(myObj.isBottomReached()){
-                            myObj.renderFeed();
-                        }
-                    })    
-                }
-                else if((this.displayedItemsCount == store.feedArr.length) && this.displayedItemsCount > 0){
-                    this.showNotif('End Of Feed.');
-                }
-            }
-        },
-        watch: {
-            bottomReached(newVal){
-                // console.log(`watcher sasys ${newVal}`);
-                if(newVal == true){//meaning bottom is reached
-                    this.renderFeed();
-                }
-
-            }
-        },
-        mounted() {
-            if(store.feedArr.length == 0){
-                this.$http({
-                url: process.env.VUE_APP_SERVER_URL + 'graphql', 
-                method: 'post',
-                data: { 
-                    query: `{getArticles{id, url, title} } `, 
-                    token: localStorage.getItem('jwt')
-                }   
-                }).then( result => {
-                    if(result.data.error){
-                        this.showNotif('Authentication Error', result.data.error);
-                        localStorage.removeItem('jwt');
-                        localStorage.removeItem('email');
-                        this.$router.push('/login');
-                    }
-                    else{
-                        store.feedArr = result.data.data.getArticles;
-                        // console.log(result.data)
-                        this.totalFeedItems = store.feedArr.length;
-                        this.renderFeed();
-                    }
-                })
-            }
-            else if(store.feedArr.length > 0){
-                this.renderFeed();
-            }
-        },
-        created(){
-            window.addEventListener('scroll', () => {
-                this.bottomReached = this.isBottomReached();
+import {store, mutations} from "../sharedStore.js";
+export default {
+    data () {
+        return {
+            email: localStorage.getItem('email'),
+            feedArrPaginate: [],
+            totalFeedItems: store.feedArr.length,
+            displayedItemsCount: 0,
+            bottomReached: false,
+            endOfFeed: false
+        }
+    },
+    methods: {
+        showNotif(title,Msg){
+            this.$notify({
+                title: title,
+                message: Msg
             });
         },
-        // computed: {
-        //     endOfFeed(){
-        //         return this.totalFeedItems==this.displayedFeedItems;
-        //     }
-        // }
-    }
+        isBottomReached(){
+            var result = (document.documentElement.clientHeight == document.documentElement.scrollHeight)  ||
+            ( (window.scrollY + document.documentElement.clientHeight) >= (document.documentElement.scrollHeight-2));
+            // console.log(`scrollheight: ${document.documentElement.scrollHeight}, clientheight: ${document.documentElement.clientHeight}, scrollY++: ${window.scrollY+ document.documentElement.clientHeight}`);
+            // console.log(`result was ${result}`);
+            return result;
+        },
+        renderFeed(){
+            if(this.displayedItemsCount < this.totalFeedItems){
+                this.feedArrPaginate.push(store.feedArr[this.displayedItemsCount++]);
+                var myObj = this;
+                Vue.nextTick(function () {
+                    if(myObj.isBottomReached()){
+                        myObj.renderFeed();
+                    }
+                })    
+            }
+            else if((this.displayedItemsCount == store.feedArr.length) && this.displayedItemsCount > 0){
+                this.showNotif('End Of Feed.');
+            }
+        }
+    },
+    watch: {
+        bottomReached(newVal){
+            // console.log(`watcher sasys ${newVal}`);
+            if(newVal == true){//meaning bottom is reached
+                this.renderFeed();
+            }
+
+        }
+    },
+    mounted() {
+    },
+    async created(){
+        window.addEventListener('scroll', () => {
+            this.bottomReached = this.isBottomReached();
+        });
+        console.log('inside dashboard\'s created');
+        console.log(`feedarr leng & mytopic len ${store.feedArr.length} & ${store.myTopics.length}`)
+        if(store.myTopics.length == 0){
+            await mutations.fetchMyTopics();
+        }
+        if(store.myTopics.length == 0){
+            this.$notify({
+                message: "You don't have any topics selected. Click on Customize feed to select some topics and generate your feed.",
+                duration: 0
+            });
+        }
+        if(store.feedArr.length == 0 && store.myTopics.length > 0){
+            this.$http({
+            url: process.env.VUE_APP_SERVER_URL + 'graphql', 
+            method: 'post',
+            data: { 
+                query: `{getArticles{id, url, title} } `, 
+                token: localStorage.getItem('jwt')
+            }   
+            }).then( result => {
+                if(result.data.error){
+                    this.showNotif('Authentication Error', result.data.error);
+                    localStorage.removeItem('jwt');
+                    localStorage.removeItem('email');
+                    this.$router.push('/login');
+                }
+                else{
+                    store.feedArr = result.data.data.getArticles;
+                    // console.log(result.data)
+                    this.totalFeedItems = store.feedArr.length;
+                    this.renderFeed();
+                }
+            })
+        }
+        else if(store.feedArr.length > 0){
+            this.renderFeed();
+        }
+    },
+    // computed: {
+    //     endOfFeed(){
+    //         return this.totalFeedItems==this.displayedFeedItems;
+    //     }
+    // }
+}
 </script>
 
 <style scoped>

@@ -18,7 +18,7 @@
         <el-menu-item index="/register" v-if="!checkLogin()">
           <router-link  to="/register">REGISTER</router-link>
         </el-menu-item>
-        <a @click="fetchTopics" v-if="checkLogin()" class="el-menu-item">CUSTOMIZE FEED</a>
+        <a @click="showCustomizeFeedDialog" v-if="checkLogin()" class="el-menu-item">CUSTOMIZE FEED</a>
         <a @click="logout" v-if="checkLogin()" class="el-menu-item">LOGOUT</a>
       </el-menu>
     </div>
@@ -36,12 +36,12 @@
 </template>
 
 <script>
-import {store} from "./sharedStore.js";
+import {store, mutations} from "./sharedStore.js";
 export default   {
   data(){
     return{
-      addTopicsDialogVisible: false,
-      topicsArr: store.topicsList
+      topicsArr: store.topicsList,
+      addTopicsDialogVisible: store.customizeFeedDialogVisible
     }
   },
   methods: {
@@ -60,51 +60,19 @@ export default   {
     checkLogin(){
       return localStorage.getItem('email') != null;
     },
-    async fetchTopics(){
-      // console.log(`store topics leng; ${store.topicsList.length}`)
+    async showCustomizeFeedDialog(){
       if(store.topicsList.length == 0){
-        this.$http({
-        url: process.env.VUE_APP_SERVER_URL + 'graphql', 
-        method: 'post',
-        data: { 
-            query: `{topics {name,id}} `, 
-            token: localStorage.getItem('jwt')
+        await mutations.fetchAllTopics();
+      }
+      for(const p of store.topicsList){
+        if(store.myTopics.indexOf(p.id) > -1){
+          p.selected = true;
         }
-        }).then(async (result) => {
-          if(result.data.error){
-              this.showNotif('Authentication Error', result.data.error);
-              localStorage.removeItem('jwt');
-              localStorage.removeItem('email');
-              this.$router.push('/login');
-          }
-          else{
-            await this.$http({
-              url:process.env.VUE_APP_SERVER_URL + 'graphql',
-              method: 'post',
-              data:{
-                query: `{myTopics {topics}} `, 
-                token: localStorage.getItem('jwt')
-              }
-            }).then( res => {
-                if(res.data.data.myTopics['topics']){
-                  store.myTopics = res.data.data.myTopics['topics'];
-                }
-            })
-            store.topicsList = result.data.data.topics.map( (item) => { item.selected = false; return item;});
-            for(const p of store.topicsList){
-              if(store.myTopics.indexOf(p.id) > -1){
-                p.selected = true;
-              }
-            }
-            // console.log(`after modifying selected ; ${store.topicsList}`);
-            this.topicsArr = store.topicsList;
-            this.addTopicsDialogVisible = true;
-          }
-        });
       }
-      else if(store.topicsList.length > 0){
-        this.addTopicsDialogVisible = true;
-      }
+      console.log(`sotre leng ${store.myTopics.length}`);
+      // console.log(`after modifying selected ; ${store.topicsList}`);
+      this.topicsArr = store.topicsList;
+      this.addTopicsDialogVisible = true;
     },
     saveTopics(){
       var topicIDs = [];
@@ -124,6 +92,8 @@ export default   {
           this.addTopicsDialogVisible = false;
           this.showNotif('','Feed customized successfully. Refresh to see changes.');
           store.feedArr = [];
+          store.myTopics = topicIDs;
+          console.log('changed store.mytopics is '+ store.myTopics);
       }).catch(err => {
           this.addTopicsDialogVisible = false;
           this.showNotif('Error', err);``
@@ -140,10 +110,13 @@ export default   {
     currentRoute(){
       return this.$route.path;
     },
+    addTopicsDialogVisible(){
+      return store.addTopicsDialogVisible;
+    }
     // checkLogin(){
     //   return localStorage.getItem('email') != null;
     // }
-  }
+  },
 }
 </script>
 
