@@ -83,11 +83,11 @@ export default   {
           store.feedArr = [];
           store.myTopics = topicIDs;
           console.log('changed store.mytopics is '+ store.myTopics);
+          this.$router.go();
       }).catch(err => {
           this.addTopicsDialogVisible = false;
           this.showNotif('Error', err);``
       });
-      this.$router.go()
     },
     showNotif(title,Msg){
       this.$notify({
