@@ -90,7 +90,6 @@ export default   {
           }
       }).then(() => {
           this.addTopicsDialogVisible = false;
-          this.showNotif('','Feed customized successfully. Refresh to see changes.');
           store.feedArr = [];
           store.myTopics = topicIDs;
           console.log('changed store.mytopics is '+ store.myTopics);
@@ -98,6 +97,7 @@ export default   {
           this.addTopicsDialogVisible = false;
           this.showNotif('Error', err);``
       });
+      this.$router.go()
     },
     showNotif(title,Msg){
       this.$notify({
